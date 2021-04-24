@@ -19,35 +19,19 @@ def extract_next_links(url, resp):
     # otherwise write into files the url, context and longest 
     # text file in each appropriate file
     # using with automatically closese all files after the with statement
-    with open("url.txt", "a", encoding='utf-8') as url_file, open("context.txt", "a", encoding='utf-8') as context_file, open("longestpage.txt", "a", encoding='utf-8') as longest_file:
-        #check if resp is greater than 400
-        if not resp:
-            return extracted_links   
-
-        if resp.raw_response.status_code > 400:
-            return extracted_links
-
-        if resp.raw_response.status > 400:
-            return extracted_links
-
-        if resp.status > 400:
-            return extracted_links
-
-        # check if this is a valid url
-        if not is_valid(url):
-            return extracted_links
+    with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "a", encoding='utf-8') as longest_file:
 
         if is_valid(url) and (resp.status == 200 or resp.status == 201 or resp.status == 202):
+            url_file.write(url+'\n')
             resp_raw_response = resp.raw_response.content
             soup = BeautifulSoup(resp_raw_response, 'html.parser')
-            url_file.write(url+'\n')
+            tokens = tokenize(soup)
 
-            word_list = list()
-            for i in soup.txt.split():
-                if i:
-                    word_list.append(i)
 
-            longest_file.write(url + " " + str
+
+
+
+            longest_file.write(url + " " + str)
 
 
 
@@ -55,7 +39,7 @@ def extract_next_links(url, resp):
         # tokens = tokenize(resp.raw_response.content)
 
     # Implementation requred.
-    return extracted_links;
+    return extracted_links
 
 def is_valid(url):
     try:
@@ -94,4 +78,8 @@ def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     text = soup.get_text()
 
-    
+
+    word_list = list()
+        for i in soup.txt.split():
+            if i:
+                word_list.append(i)
