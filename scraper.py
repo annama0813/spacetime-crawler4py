@@ -42,8 +42,6 @@ def extract_next_links(url, resp):
         x = urldefrag(link)
         extracted_links.append(x[0].get('href'))
 
-    # remove fragments
-
     # remove links visited 
     with open("url.txt", 'r') as f:
         for line in f:
@@ -55,8 +53,7 @@ def extract_next_links(url, resp):
                 return extracted_links
 
     # remove duplicates
-
-
+    extracted_links = set(extracted_links)
 
     return extracted_links
 
