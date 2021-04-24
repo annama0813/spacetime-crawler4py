@@ -7,14 +7,6 @@ from nltk.tokenize import RegexpTokenizer
 longest_file_len = 0;
 
 def scraper(url, resp):
-	links = extract_next_links(url, resp)
-	return [link for link in links if is_valid(link)]
-
-### **************************** ###
-### *** CURRENTLY INCOMPLETE *** ###
-### **************************** ###
-def extract_next_links(url, resp):
-    extracted_links = list();
 
     # create if files doesn't exist
     # otherwise write into files the url, context and longest 
@@ -27,17 +19,34 @@ def extract_next_links(url, resp):
             html_content = resp.raw_response.content
             tokens = tokenize(html_content)
 
+            content_file.write("\n".join(tokens))
+
+            tokens_length = len(tokens)
+            if longest_file_len < tokens_length:
+                lonest_file_len = tokens_length
+                longest_file.write(longest_file_len)
+
+
+	links = extract_next_links(url, resp)
+	return [link for link in links if is_valid(link)]
+
+### **************************** ###
+### *** CURRENTLY INCOMPLETE *** ###
+### **************************** ###
+def extract_next_links(url, resp):
+    extracted_links = list();
+
+    #find new links
+
+    # remove fragments
+
+    # remove links visited 
+
+
+    # remove duplicates
 
 
 
-            longest_file.write(url + " " + str)
-
-
-
-
-        # tokens = tokenize(resp.raw_response.content)
-
-    # Implementation requred.
     return extracted_links
 
 def is_valid(url):
@@ -75,13 +84,17 @@ def is_valid(url):
 
 def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
-    text = soup.get_text()
+    text = soup.get_text("|")
+
+    toReturn = list()
+
+    # filter out words that are noise i.e. menu bar items (here assuming menu bar items are less than 15 character count)
+    for item in text.split("|"):
+        if len(item) > 15:
+            toReturn.append(item)
 
     tokenizer = RegexpTokenizer(r'\w+')
-    toReturn = tokenizer.tokenize(text)
+    toReturn = tokenizer.tokenize(toReturn)
     return toReturn
-    # filter out words that are noise
-
-
 
 
