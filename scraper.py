@@ -39,21 +39,22 @@ def extract_next_links(url, resp):
         link = str(link)
 
     # find new links
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-    for link in soup.findAll('a'):
-        extracted_links.append(link.get('href'))
+    if resp.raw_response != None:
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+        for link in soup.findAll('a'):
+            extracted_links.append(link.get('href'))
 
-    for link in extracted_links:
-        link = urldefrag(link)[0]
-    # remove links visited 
-    with open("url.txt", 'r') as f:
-        for line in f:
-            current_link = line.rstrip('\n')
-            if current_link in extracted_links:
-                extracted_links.remove(current_link)
-            # if all links are visited
-            if len(extracted_links) == 0:
-                return extracted_links
+        for link in extracted_links:
+            link = urldefrag(link)[0]
+        # remove links visited 
+        with open("url.txt", 'r') as f:
+            for line in f:
+                current_link = line.rstrip('\n')
+                if current_link in extracted_links:
+                    extracted_links.remove(current_link)
+                # if all links are visited
+                if len(extracted_links) == 0:
+                    return extracted_links
 
     # remove duplicates
     extracted_links = set(extracted_links)
@@ -80,6 +81,8 @@ def is_valid(url):
         if check_calendar(url):
             return False
 
+        if check_trap(url):
+            return False
 
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -89,17 +92,22 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|z)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
 
+def check_trap(string_to_check):
+    if (re.search(r'(\/pdf\/)',string_to_check.lower())):
+        return True
+    return False
+
 # checks string (url) if it has the word 'calendar' or 'events'
 # since we know those can be traps for crawlers
 # one specific website is https://wics.ics.uci.edu/events which is a calendar
 def check_calendar(string_to_check):
-    if (re.search(r'calendar',string_to_check.lower()) or re.search(r'events',string_to_check.lower())):
+    if (re.search(r'calendar|events|share',string_to_check.lower())):
         return True
     return False
 
