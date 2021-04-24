@@ -67,8 +67,9 @@ def is_valid(url):
             if "department/information_computer_sciences" not in parsed.path:
                 return False
 
-        # check if its a calendar, needs implementation
-
+        # check if its a calendar or event
+        if check_calendar(url):
+            return False
 
 
         return not re.match(
