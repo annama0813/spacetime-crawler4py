@@ -24,36 +24,40 @@ def scraper(url, resp):
             tokens_length = len(tokens)
             if longest_file_len < tokens_length:
                 lonest_file_len = tokens_length
-                longest_file.write(longest_file_len)
+                longest_file.write(str(longest_file_len))
 
-
-	links = extract_next_links(url, resp)
-	return [link for link in links if is_valid(link)]
+    links = extract_next_links(url, resp)
+    return [link for link in links if is_valid(link)]
 
 ### **************************** ###
 ### *** CURRENTLY INCOMPLETE *** ###
 ### **************************** ###
 def extract_next_links(url, resp):
-    extracted_links = list();
+    extracted_links = list()
+    
+    for link in extracted_links:
+        link = str(link)
 
     # find new links
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     for link in soup.findAll('a'):
-        x = urldefrag(link)
-        extracted_links.append(x[0].get('href'))
+        extracted_links.append(link.get('href'))
 
+    for link in extracted_links:
+        link = urldefrag(link)[0]
     # remove links visited 
     with open("url.txt", 'r') as f:
         for line in f:
             current_link = line.rstrip('\n')
             if current_link in extracted_links:
-                extracted_links -= current_link
+                extracted_links.remove(current_link)
             # if all links are visited
             if len(extracted_links) == 0:
                 return extracted_links
 
     # remove duplicates
     extracted_links = set(extracted_links)
+
 
     return extracted_links
 
@@ -96,8 +100,8 @@ def is_valid(url):
 # one specific website is https://wics.ics.uci.edu/events which is a calendar
 def check_calendar(string_to_check):
     if (re.search(r'calendar',string_to_check.lower()) or re.search(r'events',string_to_check.lower())):
-        return true
-    return false
+        return True
+    return False
 
 def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
@@ -109,7 +113,8 @@ def tokenize(html_content):
     for item in text.split("|"):
         if len(item) > 15:
             toReturn.append(item)
-
+    
+    toReturn = ' '.join(toReturn)
     tokenizer = RegexpTokenizer(r'\w+')
     toReturn = tokenizer.tokenize(toReturn)
     return toReturn
