@@ -41,13 +41,28 @@ def extract_next_links(url, resp):
     for link in soup.findAll('a'):
         extracted_links.append(link.get('href'))
 
-    # remove fragments
+    # remove fragments add here
+
+
+
+
+
+
+
 
     # remove links visited 
+    with open("url.txt", 'r') as f:
+        for line in f:
+            current_link = line.rstrip('\n')
+            if current_link in extracted_links:
+                extracted_links -= current_link
+            # if all links are visited
+            if len(extracted_links) == 0:
+                return extracted_links
 
 
     # remove duplicates
-
+    extracted_links = set(extracted_links)
 
 
     return extracted_links
