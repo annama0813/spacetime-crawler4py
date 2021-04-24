@@ -23,9 +23,8 @@ def extract_next_links(url, resp):
 
         if is_valid(url) and (resp.status == 200 or resp.status == 201 or resp.status == 202):
             url_file.write(url+'\n')
-            resp_raw_response = resp.raw_response.content
-            soup = BeautifulSoup(resp_raw_response, 'html.parser')
-            tokens = tokenize(soup)
+            html_content = resp.raw_response.content
+            tokens = tokenize(html_content)
 
 
 
