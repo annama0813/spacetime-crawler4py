@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse
 from urllib.parse import urldefrag # for removing fragments form url
 from bs4 import BeautifulSoup
+from nltk.tokenize import RegexpTokenizer
 
 longest_file_len = 0;
 
@@ -25,7 +26,6 @@ def extract_next_links(url, resp):
             url_file.write(url+'\n')
             html_content = resp.raw_response.content
             tokens = tokenize(html_content)
-
 
 
 
@@ -77,8 +77,11 @@ def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     text = soup.get_text()
 
+    tokenizer = RegexpTokenizer(r'\w+')
+    toReturn = tokenizer.tokenize(text)
+    return toReturn
+    # filter out words that are noise
 
-    word_list = list()
-        for i in soup.txt.split():
-            if i:
-                word_list.append(i)
+
+
+
