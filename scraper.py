@@ -82,6 +82,14 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+# checks string (url) if it has the word 'calendar' or 'events'
+# since we know those can be traps for crawlers
+# one specific website is https://wics.ics.uci.edu/events which is a calendar
+def check_calendar(string_to_check):
+    if (re.search(r'calendar',string_to_check.lower()) or re.search(r'events',string_to_check.lower())):
+        return true
+    return false
+
 def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     text = soup.get_text("|")
