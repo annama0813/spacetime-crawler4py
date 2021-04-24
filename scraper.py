@@ -36,7 +36,10 @@ def scraper(url, resp):
 def extract_next_links(url, resp):
     extracted_links = list();
 
-    #find new links
+    # find new links
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    for link in soup.findAll('a'):
+        extracted_links.append(link.get('href'))
 
     # remove fragments
 
