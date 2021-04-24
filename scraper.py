@@ -1,6 +1,7 @@
 import re
 from urllib.parse import urlparse
 from urllib.parse import urldefrag # for removing fragments form url
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
 
@@ -19,7 +20,7 @@ def scraper(url, resp):
             html_content = resp.raw_response.content
             tokens = tokenize(html_content)
 
-            content_file.write("\n".join(tokens))
+            content_file.write(" ".join(tokens))
 
             tokens_length = len(tokens)
             if longest_file_len < tokens_length:
@@ -44,8 +45,12 @@ def extract_next_links(url, resp):
         for link in soup.findAll('a'):
             extracted_links.append(link.get('href'))
 
-        for link in extracted_links:
-            link = urldefrag(link)[0]
+        # filter fragments, remove queries
+        for count, link in enumerate(extracted_links):
+            extracted_links[count] = urldefrag(link)[0]
+            extracted_links[count] = urljoin(extracted_links[count],\
+                urlparse(url).path)
+
         # remove links visited 
         with open("url.txt", 'r') as f:
             for line in f:
