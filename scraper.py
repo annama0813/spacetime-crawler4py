@@ -39,16 +39,10 @@ def extract_next_links(url, resp):
     # find new links
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     for link in soup.findAll('a'):
-        extracted_links.append(link.get('href'))
+        x = urldefrag(link)
+        extracted_links.append(x[0].get('href'))
 
-    # remove fragments add here
-
-
-
-
-
-
-
+    # remove fragments
 
     # remove links visited 
     with open("url.txt", 'r') as f:
@@ -60,9 +54,8 @@ def extract_next_links(url, resp):
             if len(extracted_links) == 0:
                 return extracted_links
 
-
     # remove duplicates
-    extracted_links = set(extracted_links)
+
 
 
     return extracted_links
