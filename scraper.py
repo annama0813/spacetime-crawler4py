@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
 
-longest_file_len = 0;
+longest_file_len = 0
 
 def scraper(url, resp):
 
