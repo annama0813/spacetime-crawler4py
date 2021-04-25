@@ -7,11 +7,24 @@ from nltk.tokenize import RegexpTokenizer
 
 def scraper(url, resp):
 
+    # Read longestpage.txt. If the text file doesn't exist, create it and write 0 to it. Otherwise, update the current_longest variable
+    current_longest = 0
+    with open('longestpage.txt', 'a+') as longest_file:
+        longest_file.seek(0)
+        text = longest_file.read()
+        # If file is empty, write 0 to it. Otherwise update current_longest
+        if text == '':
+            current_longest = 0
+            longest_file.write('0')
+        else:
+            current_longest = int(text)
+
+
     # create if files doesn't exist
     # otherwise write into files the url, context and longest 
     # text file in each appropriate file
     # using with automatically closese all files after the with statement
-    with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "w", encoding='utf-8') as longest_file:
+    with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "a", encoding='utf-8') as longest_file:
 
         if is_valid(url) and (resp.status == 200 or resp.status == 201 or resp.status == 202):
             url_file.write(url+'\n')
@@ -21,15 +34,10 @@ def scraper(url, resp):
             content_file.write(" ".join(tokens))
             content_file.write("\n")
 
-            # tokens_length = len(tokens)
-            # if longest_file_len < tokens_length:
-            #     lonest_file_len = tokens_length
-            #     longest_file.write(str(longest_file_len))
-
-            current_longest = int(longest_file.read().strip())
+            # If the current page is longer, erase the longest_file and write the new length
             if current_longest < len(tokens):
+                longest_file.truncate(0)
                 longest_file.write(str(len(tokens)))
-
 
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
