@@ -13,7 +13,7 @@ def scraper(url, resp):
     # otherwise write into files the url, context and longest 
     # text file in each appropriate file
     # using with automatically closese all files after the with statement
-    with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "a", encoding='utf-8') as longest_file:
+    with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "w", encoding='utf-8') as longest_file:
 
         if is_valid(url) and (resp.status == 200 or resp.status == 201 or resp.status == 202):
             url_file.write(url+'\n')
@@ -21,11 +21,18 @@ def scraper(url, resp):
             tokens = tokenize(html_content)
 
             content_file.write(" ".join(tokens))
+            content_file.write("\n")
+
+            # tokens_length = len(tokens)
+            # if longest_file_len < tokens_length:
+            #     lonest_file_len = tokens_length
+            #     longest_file.write(str(longest_file_len))
 
             tokens_length = len(tokens)
             if longest_file_len < tokens_length:
                 lonest_file_len = tokens_length
-                longest_file.write(str(longest_file_len))
+                longest_file.write(str(len(tokens)))
+
 
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -35,9 +42,6 @@ def scraper(url, resp):
 ### **************************** ###
 def extract_next_links(url, resp):
     extracted_links = list()
-    
-    for link in extracted_links:
-        link = str(link)
 
     # find new links
     if resp.raw_response != None:
