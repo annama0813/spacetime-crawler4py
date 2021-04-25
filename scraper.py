@@ -27,10 +27,15 @@ def scraper(url, resp):
     with open("url.txt", "a", encoding='utf-8') as url_file, open("content.txt", "a", encoding='utf-8') as content_file, open("longestpage.txt", "a", encoding='utf-8') as longest_file:
 
         if is_valid(url) and (resp.status == 200 or resp.status == 201 or resp.status == 202):
-            url_file.write(url+'\n')
             html_content = resp.raw_response.content
             tokens = tokenize(html_content)
 
+            # Skip low information pages based on low token count
+            if len(tokens) < 20:
+                return []
+
+            # Write to URL and Content files
+            url_file.write(url+'\n')
             content_file.write(" ".join(tokens))
             content_file.write("\n")
 
