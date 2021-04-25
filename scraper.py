@@ -49,11 +49,11 @@ def extract_next_links(url, resp):
         for link in soup.findAll('a'):
             extracted_links.append(link.get('href'))
 
-        # filter fragments, remove queries
+        # filter fragments
         for count, link in enumerate(extracted_links):
             extracted_links[count] = urldefrag(link)[0]
-            extracted_links[count] = urljoin(extracted_links[count],\
-                urlparse(url).path)
+            # extracted_links[count] = urljoin(extracted_links[count],\
+            #     urlparse(url).path)
 
         # remove links visited 
         with open("url.txt", 'r') as f:
@@ -86,10 +86,7 @@ def is_valid(url):
             if "department/information_computer_sciences" not in parsed.path:
                 return False
 
-        # check if its a calendar or event
-        if check_calendar(url):
-            return False
-
+        # check for trap
         if check_trap(url):
             return False
 
@@ -97,7 +94,7 @@ def is_valid(url):
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+            + r"|ps|eps|tex|ppt|pptx|ppxs|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
@@ -107,18 +104,18 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+# checks string (url) if it has the specific word
+# since we know those can be traps for crawlers
+# one specific website is https://wics.ics.uci.edu/events which is a calendar
 def check_trap(string_to_check):
     if (re.search(r'(\/pdf\/)',string_to_check.lower())):
         return True
+
+    if (re.search(r'calendar|events|share|replytocom',string_to_check.lower())):
+        return True
+
     return False
 
-# checks string (url) if it has the word 'calendar' or 'events'
-# since we know those can be traps for crawlers
-# one specific website is https://wics.ics.uci.edu/events which is a calendar
-def check_calendar(string_to_check):
-    if (re.search(r'calendar|events|share',string_to_check.lower())):
-        return True
-    return False
 
 def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
