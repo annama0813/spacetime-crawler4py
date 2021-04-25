@@ -11,7 +11,7 @@ def scraper(url, resp):
     current_longest = 0
     with open('longestpage.txt', 'a+') as longest_file:
         longest_file.seek(0)
-        text = longest_file.read()
+        text = longest_file.readline()
         # If file is empty, write 0 to it. Otherwise update current_longest
         if text == '':
             current_longest = 0
@@ -43,13 +43,12 @@ def scraper(url, resp):
             if current_longest < len(tokens):
                 longest_file.truncate(0)
                 longest_file.write(str(len(tokens)))
+                longest_file.write('\n' + url)
 
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
-### **************************** ###
-### *** CURRENTLY INCOMPLETE *** ###
-### **************************** ###
+
 def extract_next_links(url, resp):
     extracted_links = list()
 
@@ -104,7 +103,7 @@ def is_valid(url):
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|ppxs|doc|docx|xls|xlsx|names"
+            + r"|ps|eps|tex|ppt|pptx|ppsx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
@@ -150,7 +149,8 @@ def tokenize(html_content):
         except UnicodeDecodeError:
             continue
         else:
-            toReturn.append(item)
+            if len(item) > 1:
+                toReturn.append(item)
 
     return toReturn
 
