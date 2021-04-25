@@ -5,8 +5,6 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
 
-longest_file_len = 0
-
 def scraper(url, resp):
 
     # create if files doesn't exist
@@ -28,9 +26,8 @@ def scraper(url, resp):
             #     lonest_file_len = tokens_length
             #     longest_file.write(str(longest_file_len))
 
-            tokens_length = len(tokens)
-            if longest_file_len < tokens_length:
-                lonest_file_len = tokens_length
+            current_longest = int(longest_file.read().strip())
+            if current_longest < len(tokens):
                 longest_file.write(str(len(tokens)))
 
 
@@ -121,16 +118,27 @@ def tokenize(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     text = soup.get_text("|")
 
-    toReturn = list()
+    words = list()
 
     # filter out words that are noise i.e. menu bar items (here assuming menu bar items are less than 15 character count)
     for item in text.split("|"):
         if len(item) > 15:
-            toReturn.append(item)
+            words.append(item)
     
-    toReturn = ' '.join(toReturn)
+    words = ' '.join(words)
     tokenizer = RegexpTokenizer(r'\w+')
-    toReturn = tokenizer.tokenize(toReturn)
+    words = tokenizer.tokenize(words)
+
+    toReturn = list()
+
+    for item in words:
+        try:
+            item.encode(encoding='utf-8').decode('ascii')
+        except UnicodeDecodeError:
+            continue
+        else:
+            toReturn.append(item)
+
     return toReturn
 
 
