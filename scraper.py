@@ -31,7 +31,7 @@ def scraper(url, resp):
             tokens = tokenize(html_content)
 
             # Skip low information pages based on low token count
-            if len(tokens) < 20:
+            if len(tokens) < 20 or len(tokens) > 100000:
                 return []
 
             # Write to URL and Content files
@@ -45,8 +45,8 @@ def scraper(url, resp):
                 longest_file.write(str(len(tokens)))
                 longest_file.write('\n' + url)
 
-    links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+            links = extract_next_links(url, resp)
+            return [link for link in links if is_valid(link)]
 
 
 def extract_next_links(url, resp):
@@ -76,7 +76,6 @@ def extract_next_links(url, resp):
 
     # remove duplicates
     extracted_links = set(extracted_links)
-
 
     return extracted_links
 
