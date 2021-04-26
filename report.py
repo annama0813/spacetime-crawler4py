@@ -76,5 +76,6 @@ print('-------------------------------------')
 print('Part 4. List of subdomains')
 print('-------------------------------------')
 
-#with open("url.txt", encoding="utf8") as file:
-#    for line in file:
+with open("url.txt", encoding="utf8") as file:
+    for line in file:
+        
