@@ -150,7 +150,7 @@ def tokenize(html_content):
             continue
         else:
             if len(item) > 1:
-                toReturn.append(item)
+                toReturn.append(item.lower())
 
     return toReturn
 

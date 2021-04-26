@@ -22,11 +22,11 @@ with open("url.txt", encoding="utf8") as file:
 # --------------- Part 2 ------------------
 # ---Number of words of the longest page---
 # -----------------------------------------
-print('-------------------------------------')
-print('Part 2. Number of words of the longest page')
-print('-------------------------------------')
-# TODO
-
+with open("longestpage.txt", encoding="utf8") as file:
+    print('-------------------------------------')
+    print('Part 2. Number of words of the longest page =', file.readline())
+    print('Link =', file.readline())
+    print('-------------------------------------')
 
 
 # -----------------------------------------
@@ -75,4 +75,6 @@ for token, count in sorted(word_freq.items(), key=lambda x: x[1], reverse=True):
 print('-------------------------------------')
 print('Part 4. List of subdomains')
 print('-------------------------------------')
-# TODO
+
+#with open("url.txt", encoding="utf8") as file:
+#    for line in file:
