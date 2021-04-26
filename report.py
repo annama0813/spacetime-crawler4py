@@ -1,8 +1,10 @@
+from urllib.parse import urlparse
+
 # The report has 4 parts
 # 1. [DONE] Number of unique pages
-# 2. [TODO] Number of words of the longest page
+# 2. [DONE] Number of words of the longest page
 # 3. [DONE] 50 most common words
-# 4. [TODO] Number of subdomains in ics.uci.edu domain? List subdomains ordered alphabetically and number of unique pages in each subdomain. lines containing URL, number (http://vision.ics.uci.edu, 10
+# 4. [DONE] Number of subdomains in ics.uci.edu domain? List subdomains ordered alphabetically and number of unique pages in each subdomain. lines containing URL, number (http://vision.ics.uci.edu, 10
 
 # -----------------------------------------
 # --------------- Part 1 ------------------
@@ -77,5 +79,20 @@ print('Part 4. List of subdomains')
 print('-------------------------------------')
 
 with open("url.txt", encoding="utf8") as file:
+    toOutput = {}
     for line in file:
-        
+        if "ics.uci.edu" in line:
+            domain = urlparse(line).netloc
+            domain = domain.replace("www.", "", 1)
+            domain = domain.strip().lower()
+            if domain in toOutput:
+                toOutput[domain] +=1
+            else:
+                toOutput[domain] = 1
+        else:
+            continue
+    
+    del toOutput["ics.uci.edu"]
+    sorted_output = sorted(toOutput.items(), key=lambda x:x[0])
+    for i in sorted_output:
+        print(i[0],i[1])
