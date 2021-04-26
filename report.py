@@ -53,7 +53,7 @@ with open("content.txt", encoding="utf8") as file:
         for word in line.split(' '):
             if word in stop_words:      # Skip if it's a stop word
                 continue
-            if word in word_freq:
+            elif word in word_freq:
                 word_freq[word] += 1
             else:
                 word_freq[word] = 1
