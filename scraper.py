@@ -31,7 +31,7 @@ def scraper(url, resp):
             tokens = tokenize(html_content)
 
             # Skip low information pages based on low token count
-            if len(tokens) < 20 or len(tokens) > 100000:
+            if len(tokens) < 20 or len(tokens) > 50000:
                 return []
 
             # Write to URL and Content files
